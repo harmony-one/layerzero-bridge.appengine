@@ -5,6 +5,7 @@ import { IOperationInitParams } from '../Operation';
 import { Action } from '../Action';
 import { ACTION_TYPE } from '../interfaces';
 import logger from '../../../logger';
+import axios from 'axios';
 
 const log = logger.module('validator:Erc20ActionPool');
 
@@ -40,7 +41,23 @@ export const ethToOneERC20 = (
 
   const mintTokenAction = new Action({
     type: ACTION_TYPE.mintToken,
-    callFunction: async hash => await ethMethods.waitTransaction(hash),
+    callFunction: async () => {
+      const hash = lockTokenAction.transactionHash;
+
+      const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+
+      const { status } = res.data?.messages[0] || {};
+
+      if (status === "DELIVERED") {
+        return { status: true, transactionHash: hash }
+      }
+
+      if (status === "ERROR") {
+        throw new Error('Layer zero delivery error');
+      }
+
+      return null;
+    },
   });
 
   return {
@@ -82,9 +99,28 @@ export const hmyToEthERC20 = (
   //     ),
   // });
 
+  // https://api-mainnet.layerzero-scan.com/tx/0x78f4ab18c13aefef10c15eab2e1b2122fecd4b70b6bf7ca1f207e07694340737
+
   const unlockTokenAction = new Action({
     type: ACTION_TYPE.unlockToken,
-    callFunction: hash => hmyMethods.getTransactionReceipt(hash),
+    awaitConfirmation: true,
+    callFunction: async () => {
+      const hash = burnTokenAction.transactionHash;
+
+      const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+
+      const { status } = res.data?.messages[0] || {};
+
+      if (status === "DELIVERED") {
+        return { status: true, transactionHash: hash }
+      }
+
+      if (status === "ERROR") {
+        throw new Error('Layer zero delivery error');
+      }
+
+      return null;
+    },
   });
 
   return {

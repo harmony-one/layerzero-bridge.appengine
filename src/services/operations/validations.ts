@@ -205,3 +205,4 @@ export const validateOneBalanceNonZeroEx = async address => {
 
   return res.result;
 };
+

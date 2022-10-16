@@ -1,5 +1,6 @@
 import * as hmyContract from '../../../blockchain/hmy';
 import { hmy } from '../../../blockchain/hmy';
+import { getHmyTransactionByHash } from '../../../blockchain/hmy/helpers'
 import * as ethContract from '../../../blockchain/eth';
 import { IOperationInitParams } from '../Operation';
 import { Action } from '../Action';
@@ -42,21 +43,25 @@ export const ethToOneERC20 = (
   const mintTokenAction = new Action({
     type: ACTION_TYPE.mintToken,
     callFunction: async () => {
-      const hash = lockTokenAction.transactionHash;
+      const hash = lockTokenAction.payload.transactionHash;
 
-      const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+      let status;
 
-      const { status } = res.data?.messages[0] || {};
+      while (status != "DELIVERED") {
+        const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
 
-      if (status === "DELIVERED") {
-        return { status: true, transactionHash: hash }
+        const mess = res.data?.messages[0] || {};
+
+        status = mess.status;
+
+        if (status === "DELIVERED") {
+          return { status: true, transactionHash: hash }
+        }
+
+        if (status === "ERROR") {
+          throw new Error('Layer zero delivery error');
+        }
       }
-
-      if (status === "ERROR") {
-        throw new Error('Layer zero delivery error');
-      }
-
-      return null;
     },
   });
 
@@ -103,23 +108,28 @@ export const hmyToEthERC20 = (
 
   const unlockTokenAction = new Action({
     type: ACTION_TYPE.unlockToken,
-    awaitConfirmation: true,
     callFunction: async () => {
-      const hash = burnTokenAction.transactionHash;
+      let status;
 
-      const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+      while (status != "DELIVERED") {
+        const tx = await getHmyTransactionByHash(burnTokenAction.payload.transactionHash);
 
-      const { status } = res.data?.messages[0] || {};
+        const hash = tx.ethHash;
 
-      if (status === "DELIVERED") {
-        return { status: true, transactionHash: hash }
+        const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+
+        const mess = res.data?.messages[0] || {};
+
+        status = mess.status;
+
+        if (status === "DELIVERED") {
+          return { status: true, transactionHash: hash }
+        }
+
+        if (status === "ERROR") {
+          throw new Error('Layer zero delivery error');
+        }
       }
-
-      if (status === "ERROR") {
-        throw new Error('Layer zero delivery error');
-      }
-
-      return null;
     },
   });
 

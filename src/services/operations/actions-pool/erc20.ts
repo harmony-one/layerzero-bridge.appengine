@@ -50,12 +50,16 @@ export const ethToOneERC20 = (
       while (status != "DELIVERED") {
         const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
 
-        const mess = res.data?.messages[0] || {};
+        const lz = res.data?.messages[0] || {};
 
-        status = mess.status;
+        status = lz.status;
 
         if (status === "DELIVERED") {
-          return { status: true, transactionHash: hash }
+          return {
+            status: true,
+            transactionHash: hash,
+            link: `https://layerzeroscan.com/${lz.srcChainId}/address/${lz.srcUaAddress}/message/${lz.dstChainId}/address/${lz.dstUaAddress}/nonce/${lz.srcUaNonce}`
+          }
         }
 
         if (status === "ERROR") {
@@ -118,12 +122,16 @@ export const hmyToEthERC20 = (
 
         const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
 
-        const mess = res.data?.messages[0] || {};
+        const lz = res.data?.messages[0] || {};
 
-        status = mess.status;
+        status = lz.status;
 
         if (status === "DELIVERED") {
-          return { status: true, transactionHash: hash }
+          return {
+            status: true,
+            transactionHash: hash,
+            link: `https://layerzeroscan.com/${lz.srcChainId}/address/${lz.srcUaAddress}/message/${lz.dstChainId}/address/${lz.dstUaAddress}/nonce/${lz.srcUaNonce}`
+          }
         }
 
         if (status === "ERROR") {

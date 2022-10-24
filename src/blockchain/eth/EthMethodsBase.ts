@@ -408,4 +408,18 @@ export class EthMethodsBase extends EventsConstructor {
 
     return [name, symbol, decimals];
   };
+
+  tokenBalance = async (contract: string, userAddress: string) => {
+    const erc20Contract =
+      this.tokenContractsCache[contract] ||
+      new this.web3.eth.Contract(erc20Json.abi as any, contract);
+
+    this.tokenContractsCache[contract] = erc20Contract;
+
+    return await erc20Contract.methods.balanceOf(userAddress).call();
+  };
+
+  nativeTokenBalance = async (userAddress: string) => {
+    return await this.web3.eth.getBalance(userAddress);
+  };
 }

@@ -33,7 +33,7 @@ export enum TOKEN {
     ONE = 'one',
 }
 
-const tokensConfigs = [
+export const tokensConfigs: ITokenInfo[] = [
     {
         hrc20Address: '0x00eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         erc20Address: '0x03fF0ff224f904be3118461335064bB48Df47938',

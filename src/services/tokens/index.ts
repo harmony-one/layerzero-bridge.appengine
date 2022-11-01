@@ -8,8 +8,6 @@ import { getConfig } from '../../configs';
 import { tokenPrices } from './TokenPrices';
 import { tokensConfigs, ITokenInfo as ITokenConfigInfo, NETWORK_TYPE } from './config';
 import { TOKEN } from 'bridge-sdk';
-import { hmyMethods } from 'src/blockchain/hmy';
-
 const log = logger.module('validator:tokensService');
 
 const config = getConfig();

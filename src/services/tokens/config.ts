@@ -1,5 +1,3 @@
-import { Panorama } from "aws-sdk";
-
 export interface ITokenInfo {
     name: string;
     symbol: string;

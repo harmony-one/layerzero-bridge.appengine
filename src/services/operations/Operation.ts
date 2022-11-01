@@ -198,6 +198,8 @@ export class Operation {
           this.status = action.status === STATUS.CANCELED ? STATUS.CANCELED : STATUS.ERROR;
           await this.syncOperationCallback(this);
 
+          return;
+
           const needWithdrawOne =
             this.type === OPERATION_TYPE.ONE_ETH &&
             ![ACTION_TYPE.depositOne, ACTION_TYPE.withdrawOne].includes(action.type);

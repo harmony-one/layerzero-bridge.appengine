@@ -1,5 +1,6 @@
 export interface ITokenInfo {
     name: string;
+    horizon?: boolean; 
     symbol: string;
     decimals: string;
     erc20Address: string;

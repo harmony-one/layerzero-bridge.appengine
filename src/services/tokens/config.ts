@@ -824,6 +824,6 @@ export const tokensConfigs: ITokenInfo[] = [
     token: TOKEN.ERC20,
     type: TOKEN.ERC20,
     network: NETWORK_TYPE.BINANCE,
-    image: '/mm_icon.svg',
+    image: '/mm_icon.png',
   },
 ];

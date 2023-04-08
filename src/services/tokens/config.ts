@@ -827,3 +827,18 @@ export const tokensConfigs: ITokenInfo[] = [
     image: '/mm_icon.png',
   },
 ];
+
+export const findTokenConfig = (token: {
+  erc20Address?: string;
+  hrc20Address?: string;
+  network: NETWORK_TYPE;
+}) => {
+  const { erc20Address, hrc20Address, network } = token;
+
+  return tokensConfigs.find(
+    t =>
+      (t.erc20Address.toLowerCase() === erc20Address.toLowerCase() ||
+        t.hrc20Address.toLowerCase() === hrc20Address.toLowerCase()) &&
+      network === t.network,
+  );
+};

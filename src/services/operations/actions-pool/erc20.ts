@@ -7,6 +7,7 @@ import { Action } from '../Action';
 import { ACTION_TYPE } from '../interfaces';
 import logger from '../../../logger';
 import axios from 'axios';
+import { getLzEvents } from './helpers';
 
 const log = logger.module('validator:Erc20ActionPool');
 
@@ -48,9 +49,14 @@ export const ethToOneERC20 = (
       let status;
 
       while (status != "DELIVERED") {
-        const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
+        let lz;
 
-        const lz = res.data?.messages[0] || {};
+        try {
+          const res = await axios.get(`https://apdi-mainnet.layerzero-scan.com/tx/${hash}`);
+          lz = res.data?.messages[0] || {};
+        } catch (e) {
+          lz = await getLzEvents(params);
+        }
 
         status = lz.status;
 
@@ -58,7 +64,7 @@ export const ethToOneERC20 = (
           return {
             status: true,
             transactionHash: hash,
-            link: `https://layerzeroscan.com/${lz.srcChainId}/address/${lz.srcUaAddress}/message/${lz.dstChainId}/address/${lz.dstUaAddress}/nonce/${lz.srcUaNonce}`
+            link: `https://layerzeroscan.com/${lz.srcChainId}/address/${lz.srcUaAddress?.toLowerCase()}/message/${lz.dstChainId}/address/${lz.dstUaAddress?.toLowerCase()}/nonce/${lz.srcUaNonce}`
           }
         }
 

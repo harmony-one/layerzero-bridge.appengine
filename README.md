@@ -1,5 +1,5 @@
 # ethhmy-bridge.appengine
-Harmony Eth Bridge appengine
+Harmony Layerzero Bridge appengine
 
 ## Install instructions
 
@@ -12,7 +12,7 @@ Harmony Eth Bridge appengine
 * Fetch repo 
 
 ```
-git clone git@github.com:harmony-one/ethhmy-bridge.appengine.git
+git clone git@github.com:harmony-one/layerzero-bridge.appengine.git
 ```
 
 * Install dependencies
@@ -24,11 +24,12 @@ npm install
 * Create empty secrets (read only mode)
 
 ```
-mkdir ./encrypted
-touch ./encrypted/eth-secret
-touch ./encrypted/hmy-secret
+mkdir -p ./keys
 ```
 
+keys folder contain the firebase credentials in a file named `keys.json`
+
+private environment can also be loaded there with a file named `.env.private`
 
 * Develop
 
@@ -52,12 +53,12 @@ npm run start:prod
 * How to get all operations list 
 
 ```
-curl --location --request GET 'http://localhost:8080/busd/operations'
+curl --location --request GET 'http://localhost:8080/operations'
 ```
 
 # Docker
 
-## build ethhmy-be docker image
+## build lz-be docker image
 ```
 ./build.sh
 ```
@@ -67,6 +68,6 @@ You need to have permission to push to the harmonyone repo.
 
 ```bash
 sudo docker login
-sudo docker tag ethhmy-be harmonyone/ethhmy-be:latest
-sudo docker push harmonyone/ethhmy-be
+sudo docker tag lz-be harmonyone/lz-be:latest
+sudo docker push harmonyone/lz-be
 ```

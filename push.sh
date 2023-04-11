@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE=ethhmy-be
+IMAGE=lz-be
 TAG=latest
 NETWORK=
 

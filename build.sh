@@ -29,7 +29,7 @@ if [ -z "$NETWORK" ]; then
 fi
 
 if [ "$NETWORK" == "mainnet" ]; then
-	sudo docker build -f Dockerfile.be -t ethhmy-be .
+	sudo docker build -f Dockerfile.be -t lz-be .
 else
-	sudo docker build -f Dockerfile.be."$NETWORK" -t ethhmy-be:"$NETWORK" .
+	sudo docker build -f Dockerfile.be."$NETWORK" -t lz-be:"$NETWORK" .
 fi

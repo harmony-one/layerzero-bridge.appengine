@@ -18,8 +18,10 @@ export class TokenPrices {
   }
 
   initCoinGecko = async () => {
-    const res = await axios.get('https://api.coingecko.com/api/v3/coins/list');
-    this.coinGeckoTokens = res.data;
+    try {
+      const res = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+      this.coinGeckoTokens = res.data;
+    } catch(e) {}
   };
 
   getTokenPrice = async (symbol: string) => {

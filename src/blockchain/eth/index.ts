@@ -170,3 +170,9 @@ export const binanceNetwork = init(
   NETWORK_TYPE.BINANCE,
   process.env.BSC_RPC_URL
 );
+
+export const arbitrumNetwork = init(
+  config.arbitrumClient,
+  NETWORK_TYPE.ARBITRUM,
+  process.env.ARB_RPC_URL
+);

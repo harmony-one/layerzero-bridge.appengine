@@ -1,7 +1,7 @@
 import { DBService } from '../database';
 import logger from '../../logger';
 import { divDecimals } from './helpers';
-import { binanceNetwork, ethNetwork } from '../../blockchain/eth';
+import { binanceNetwork, ethNetwork, arbitrumNetwork } from '../../blockchain/eth';
 import { web3Hmy } from '../../blockchain/hmy';
 import { OperationService } from '../operations';
 import { getConfig } from '../../configs';
@@ -72,28 +72,46 @@ export class Tokens {
 
             try {
                 if (token.type === TOKEN.ETH) {
-                    if (token.network === NETWORK_TYPE.BINANCE) {
-                        totalLocked = Number(
-                            await binanceNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
-                        );
-                    } else {
-                        totalLocked = Number(
-                            await ethNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
-                        );
+                    switch (token.network) {
+                        case NETWORK_TYPE.BINANCE:
+                            totalLocked = Number(
+                                await binanceNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
+                            );
+                            break;
+
+                        case NETWORK_TYPE.ETHEREUM:
+                            totalLocked = Number(
+                                await ethNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
+                            );
+                            break;
+
+                        case NETWORK_TYPE.ARBITRUM:
+                            totalLocked = Number(
+                                await arbitrumNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
+                            );
+                            break;
                     }
                 } else if (token.type === TOKEN.ONE) {
                     totalLocked = Number(
                         await web3Hmy.eth.getBalance(token.proxyHRC20)
                     );
                 } else {
-                    if (token.network === NETWORK_TYPE.BINANCE) {
-                        totalLocked = await binanceNetwork.ethMethods.tokenBalance(
-                            token.erc20Address, token.proxyERC20
-                        );
-                    } else {
-                        totalLocked = await ethNetwork.ethMethods.tokenBalance(
-                            token.erc20Address, token.proxyERC20
-                        );
+                    switch (token.network) {
+                        case NETWORK_TYPE.BINANCE:
+                            totalLocked = await binanceNetwork.ethMethods.tokenBalance(
+                                token.erc20Address, token.proxyERC20
+                            );
+                            break;
+                        case NETWORK_TYPE.ETHEREUM:
+                            totalLocked = await ethNetwork.ethMethods.tokenBalance(
+                                token.erc20Address, token.proxyERC20
+                            );
+                            break;
+                        case NETWORK_TYPE.ARBITRUM:
+                            totalLocked = await arbitrumNetwork.ethMethods.tokenBalance(
+                                token.erc20Address, token.proxyERC20
+                            );
+                            break;
                     }
                 }
             } catch (e) {

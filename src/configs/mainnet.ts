@@ -46,6 +46,39 @@ const binanceClient: TConfig = {
   gasLimit: 1000000,
 };
 
+const arbitrumClient: TConfig = {
+  nodeURL: 'https://rpc.ankr.com/arbitrum',
+  explorerURL: 'https://arbiscan.io/',
+  tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
+  contracts: {
+    multisigWallet: '0x715CdDa5e9Ad30A0cEd14940F9997EE611496De6',
+
+    erc20Manager: '0xfD53b1B4AF84D59B20bF2C20CA89a6BeeAa2c628',
+    hrc20Manager: '0xfD53b1B4AF84D59B20bF2C20CA89a6BeeAa2c628',
+    ethManager: '0xfD53b1B4AF84D59B20bF2C20CA89a6BeeAa2c628',
+
+    tokenManager: '0xfE601dE9D4295274b9904D5a9Ad7069F23eE2B32',
+    nativeTokenHRC20: '0xb1f6E61E1e113625593a22fa6aa94F8052bc39E0',
+
+    busd: '0xa011471158D19854aF08A22839f81321309D4A12',
+    busdManager: '0xCC93449c89e8064124FFe1E9d3A84398b4f90ebd',
+    link: '0xFEFB4061d5c4F096D29e6ac8e300314b5F00199c',
+    linkManager: '0x9EDC8d0Bde1Fc666831Bda1ded5B34A45f9E886C',
+    erc721Manager: '0x426A61A2127fDD1318Ec0EdCe02474f382FdAd30',
+
+    hrc721Manager: '',
+    hrc721TokenManager: '',
+
+    hrc1155Manager: '',
+    hrc1155TokenManager: '',
+
+    erc1155Manager: '',
+    erc1155TokenManager: '',
+  },
+  gasPrice: 6000000000,
+  gasLimit: 1000000,
+};
+
 const ethClient: TConfig = {
   nodeURL: 'https://mainnet.infura.io/v3',
   explorerURL: 'https://etherscan.io',
@@ -93,6 +126,7 @@ const hmyClient = {
 export const mainnet = {
   api,
   binanceClient,
+  arbitrumClient,
   ethClient,
   hmyClient,
 };

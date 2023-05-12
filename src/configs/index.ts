@@ -17,7 +17,7 @@ export type TConfig = {
   nodeURL: string;
   explorerURL: string;
   tokens: TOKEN[];
-  contracts: {
+  contracts?: {
     busd: string;
     link: string;
     busdManager: string;

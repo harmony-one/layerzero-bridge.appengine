@@ -3,7 +3,7 @@ import { NETWORK_TYPE, OPERATION_TYPE } from '../interfaces';
 import { createError } from '../../../routes/helpers';
 import { IOperationInitParams, TCreateOperationCallback } from '../Operation';
 import * as hmyContract from '../../../blockchain/hmy';
-import { binanceNetwork, ethNetwork, IMethods } from '../../../blockchain/eth';
+import { binanceNetwork, ethNetwork, arbitrumNetwork, IMethods } from '../../../blockchain/eth';
 // import { ethToOne, hmyToEth } from './base';
 import { ethToOneERC20, hmyToEthERC20 } from './erc20';
 
@@ -21,6 +21,9 @@ export const generateActionsPool = async (
     case NETWORK_TYPE.BINANCE:
       externalNetwork = binanceNetwork;
       break;
+    case NETWORK_TYPE.ARBITRUM:
+        externalNetwork = arbitrumNetwork;
+        break;  
     default:
       externalNetwork = ethNetwork;
       break;

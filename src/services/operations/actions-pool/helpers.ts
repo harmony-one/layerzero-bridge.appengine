@@ -25,17 +25,23 @@ export const getLzEvents = async (params: IOperationInitParams) => {
     network: params.network
   })
 
-  const res = await axios.get('https://harmony-lz-events.fly.dev/tracker/events', {
-    params: {
-      chain: params.type === OPERATION_TYPE.ETH_ONE ?
-        'hmy' :
-        params.network === NETWORK_TYPE.BINANCE ? 'bsc' : 'eth',
-      from: params.type === OPERATION_TYPE.ETH_ONE ? params.ethAddress : params.oneAddress,
-      to: params.type === OPERATION_TYPE.ETH_ONE ? params.oneAddress : params.ethAddress,
-      dstUaAddress: params.type === OPERATION_TYPE.ETH_ONE ? tokenConfig.proxyHRC20 : tokenConfig.proxyERC20,
-      amount: mulDecimals(params.amount, tokenConfig.decimals)
-    }
-  });
+  let res;
+
+  try {
+    res = await axios.get('https://harmony-lz-events.fly.dev/tracker/events', {
+      params: {
+        chain: params.type === OPERATION_TYPE.ETH_ONE ?
+          'hmy' :
+          params.network === NETWORK_TYPE.BINANCE ? 'bsc' : 'eth',
+        from: params.type === OPERATION_TYPE.ETH_ONE ? params.ethAddress : params.oneAddress,
+        to: params.type === OPERATION_TYPE.ETH_ONE ? params.oneAddress : params.ethAddress,
+        dstUaAddress: params.type === OPERATION_TYPE.ETH_ONE ? tokenConfig.proxyHRC20 : tokenConfig.proxyERC20,
+        amount: mulDecimals(params.amount, tokenConfig.decimals)
+      }
+    });
+  } catch (e) {
+    res = { data: [] };
+  }
 
   return {
     ...res.data[0],

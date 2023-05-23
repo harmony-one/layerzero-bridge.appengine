@@ -1,5 +1,6 @@
 import axios from 'axios';
 import logger from '../../logger';
+import { coinGeckoTokens } from './coin-gecko-tokens';
 const log = logger.module('validator:tokensPrices');
 
 export class TokenPrices {
@@ -18,8 +19,12 @@ export class TokenPrices {
   }
 
   initCoinGecko = async () => {
-    const res = await axios.get('https://api.coingecko.com/api/v3/coins/list');
-    this.coinGeckoTokens = res.data;
+    try {
+      const res = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+      this.coinGeckoTokens = res.data;
+    } catch {
+      this.coinGeckoTokens = coinGeckoTokens;
+    }
   };
 
   getTokenPrice = async (symbol: string) => {
@@ -59,7 +64,7 @@ export class TokenPrices {
 
           usdPrice = res.data[coingeckoToken.id].usd;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // if (!Number(usdPrice)) {

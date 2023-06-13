@@ -47,7 +47,9 @@ export class Tokens {
     constructor(params: IOperationService) {
         this.database = params.database;
 
-        this.getTotalLocked();
+        if (process.env.HMY_TOKENS_TRACKER_ENABLE === 'true') {
+            this.getTotalLocked();
+        }
     }
 
     getTotalLocked = async () => {

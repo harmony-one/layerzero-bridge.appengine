@@ -8,6 +8,7 @@ import { ACTION_TYPE } from '../interfaces';
 import logger from '../../../logger';
 import axios from 'axios';
 import { getLzEvents } from './helpers';
+import { sleep } from '../../../blockchain/utils';
 
 const log = logger.module('validator:Erc20ActionPool');
 
@@ -71,6 +72,8 @@ export const ethToOneERC20 = (
         if (status === "ERROR") {
           throw new Error('Layer zero delivery error');
         }
+        
+        await sleep(5000);
       }
     },
   });
@@ -143,6 +146,8 @@ export const hmyToEthERC20 = (
         if (status === "ERROR") {
           throw new Error('Layer zero delivery error');
         }
+        
+        await sleep(5000);
       }
     },
   });

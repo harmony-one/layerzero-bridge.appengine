@@ -310,7 +310,7 @@ export class OperationService {
   };
 
   removeLastOperationFromCache = () => {
-    // this.operations = this.operations.slice(100);
+    this.operations = this.operations.slice(100);
   };
 
   getOperationById = (id: string) => {

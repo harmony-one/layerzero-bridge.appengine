@@ -19,8 +19,8 @@ const log = logger.module('validator:ethMethodsBase');
 
 const queue = new ActionsQueue();
 
-const WAIT_TIMEOUT = 60 * 60 * 1000;
-const AWAIT_STEP = 5 * 1000;
+const WAIT_TIMEOUT = 30 * 60 * 1000;
+const AWAIT_STEP = 60 * 1000;
 
 export interface IEthMethodsInitParams {
   web3: Web3;
@@ -148,9 +148,7 @@ export class EthMethodsBase extends EventsConstructor {
       let res;
 
       while (!res && maxAwaitTime >= 0) {
-        await sleep(AWAIT_STEP);
-        maxAwaitTime = maxAwaitTime - AWAIT_STEP;
-
+        await sleep(5000);
         res = await this.web3.eth.getTransactionReceipt(txHash);
 
         if (!res) {
@@ -176,6 +174,9 @@ export class EthMethodsBase extends EventsConstructor {
             log.warn('Check to other tx with the same nonce', { txHash, error: e, lastBlock });
           }
         }
+        
+        await sleep(AWAIT_STEP);
+        maxAwaitTime = maxAwaitTime - AWAIT_STEP;
       }
 
       if (!res) {

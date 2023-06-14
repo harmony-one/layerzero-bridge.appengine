@@ -64,21 +64,21 @@ export const routes = (app, services: IServices) => {
       const page = parseInt(req.query.page, 10) || 0;
       const size = parseInt(req.query.size, 10) || 50;
 
-      if (ethAddress && oneAddress) {
-        const data = await services.operations.getAllOperationFullHistory({
-          ethAddress,
-          oneAddress,
-          status,
-          network,
-          type,
-          token,
-          page,
-          size,
-          amount,
-        });
+//       if (ethAddress && oneAddress) {
+//         const data = await services.operations.getAllOperationFullHistory({
+//           ethAddress,
+//           oneAddress,
+//           status,
+//           network,
+//           type,
+//           token,
+//           page,
+//           size,
+//           amount,
+//         });
 
-        return res.json(data);
-      }
+//         return res.json(data);
+//       }
 
       const data = await services.operations.getAllOperations({
         ethAddress,
@@ -173,18 +173,18 @@ export const routes = (app, services: IServices) => {
     })
   );
 
-  app.get(
-    '/deposit-amount/:network',
-    asyncHandler(async (req, res) => {
-      let data = await services.operations.getDepositAmount(req.params.network);
+//   app.get(
+//     '/deposit-amount/:network',
+//     asyncHandler(async (req, res) => {
+//       let data = await services.operations.getDepositAmount(req.params.network);
 
-      if (parseInt(req.query.gas) > 0) {
-        data += services.operations.getOneByETHGasFee(parseInt(req.query.gas));
-      }
+//       if (parseInt(req.query.gas) > 0) {
+//         data += services.operations.getOneByETHGasFee(parseInt(req.query.gas));
+//       }
 
-      return res.json(data);
-    })
-  );
+//       return res.json(data);
+//     })
+//   );
 
   app.get(
     '/version',
@@ -200,24 +200,24 @@ export const routes = (app, services: IServices) => {
     })
   );
 
-  app.get(
-    '/balance/:network/:address',
-    asyncHandler(async (req, res) => {
-      let result;
+//   app.get(
+//     '/balance/:network/:address',
+//     asyncHandler(async (req, res) => {
+//       let result;
 
-      try {
-        if(req.params.network === 'ONE') {
-          result = await validateOneBalanceNonZeroEx(req.params.address);
-        } else {
-          result = await validateEthBalanceNonZero(req.params.address, req.params.network);
-        }
-      } catch (e) {
-        throw createError(500, 'User eth balance is to low');
-      }
+//       try {
+//         if(req.params.network === 'ONE') {
+//           result = await validateOneBalanceNonZeroEx(req.params.address);
+//         } else {
+//           result = await validateEthBalanceNonZero(req.params.address, req.params.network);
+//         }
+//       } catch (e) {
+//         throw createError(500, 'User eth balance is to low');
+//       }
 
-      return res.json({ result });
-    })
-  );
+//       return res.json({ result });
+//     })
+//   );
 
   app.get(
     '/events-history-hmy',
@@ -283,7 +283,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/ui-config',
     asyncHandler(async (req, res) => {
-      if (!UI_CONFIG_CACHE || Date.now() - lastRequestTime > 60 * 1000) {
+      if (!UI_CONFIG_CACHE || Date.now() - lastRequestTime > 30 * 60 * 1000) {
         const assetsData = await services.database.getCollectionData('assets-config');
         const assetsBlackList = assetsData[0]['ui-black-list'];
 

@@ -38,7 +38,7 @@ export class OperationService {
 
     this.restoreOperationsFromDB();
 
-    this.checkStuckOperations();
+    // this.checkStuckOperations();
   }
 
   checkStuckOperations = async () => {

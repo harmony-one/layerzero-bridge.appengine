@@ -131,6 +131,28 @@ export class OperationService {
           'You have reached the limit of transfers from Harmony to Ethereum (5 transfers within 24 hours)'
         );
       }
+
+      if (
+        this.operations.some(
+          op =>
+            normalizeOne(op.ethAddress) === normalizeOne(params.ethAddress) &&
+            op.amount === params.amount &&
+            (op.status === STATUS.IN_PROGRESS || op.status === STATUS.WAITING)
+        )
+      ) {
+        throw createError(500, 'The same operation already in progress. Wait for execution to finish.');
+      }
+    } else {
+      if (
+        this.operations.some(
+          op =>
+            normalizeOne(op.oneAddress) === normalizeOne(params.oneAddress) &&
+            op.amount === params.amount &&
+            (op.status === STATUS.IN_PROGRESS || op.status === STATUS.WAITING)
+        )
+      ) {
+        throw createError(500, 'The same operation already in progress. Wait for execution to finish.');
+      }
     }
 
     if (

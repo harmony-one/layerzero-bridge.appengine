@@ -34,13 +34,15 @@ export class DBService {
   public getCollectionDataWithLimit = async (
     collectionName: string,
     orderBy: string,
-    limit: number
+    limit: number,
+    offset: number
   ): Promise<any> => {
     try {
       const snapshot = await this.db
         .collection(collectionName)
         .orderBy(orderBy, 'desc')
         .limit(limit)
+        .offset(offset)
         .get();
       return snapshot.docs.map(doc => doc.data());
     } catch (err) {

@@ -52,6 +52,7 @@ export class Operation {
   rollbackActions: Action[];
   wasRestarted = 0;
   operationService: OperationService;
+  disableActions = false;
 
   syncOperationCallback: TSyncOperationCallback;
   createOperationCallback: TCreateOperationCallback;
@@ -59,7 +60,8 @@ export class Operation {
   asyncConstructor = async (
     params: IOperationInitParams,
     callback: TSyncOperationCallback,
-    createOperationCallback: TCreateOperationCallback
+    createOperationCallback: TCreateOperationCallback,
+    disableActions = false
   ) => {
     this.id = params.id;
     this.parentId = params.parentId || '';
@@ -74,6 +76,7 @@ export class Operation {
     this.token = params.token;
     this.wasRestarted = params.wasRestarted;
     this.operationService = params.operationService;
+    this.disableActions = disableActions;
 
     this.timestamp = !!params.status ? params.timestamp : Math.round(+new Date() / 1000);
 
@@ -158,7 +161,7 @@ export class Operation {
       this.status = STATUS.WAITING;
     }
 
-    if (this.status === STATUS.WAITING || this.status === STATUS.IN_PROGRESS) {
+    if (!disableActions && this.status === STATUS.WAITING || this.status === STATUS.IN_PROGRESS) {
       this.startActionsPool();
     }
   };

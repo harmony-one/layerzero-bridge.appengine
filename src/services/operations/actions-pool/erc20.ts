@@ -53,7 +53,7 @@ export const ethToOneERC20 = (
         let lz;
 
         try {
-          const res = await axios.get(`https://apdi-mainnet.layerzero-scan.com/tx/${hash}`);
+          const res = await axios.get(`https://api-mainnet.layerzero-scan.com/tx/${hash}`);
           lz = res.data?.messages[0] || {};
         } catch (e) {
           await sleep(5000);

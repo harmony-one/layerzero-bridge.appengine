@@ -69,11 +69,48 @@ export class OperationService {
   };
 
   restoreOperationsFromDB = async (id?: string) => {
-    const operations: Operation[] = await this.database.getCollectionDataWithLimit(
-      this.dbCollectionName,
-      'timestamp',
-      CACHE_LIMIT
-    );
+    let operations: Operation[] = [];
+    const daysCount = 7
+    const weekTimestamp = moment().subtract(daysCount, 'days').unix()
+
+
+    for (let i = 0; i < 100; i++) {
+      const ops = await this.database.getCollectionDataWithLimit(
+        this.dbCollectionName,
+        'timestamp',
+        1000,
+        i * 1000
+      )
+
+      ops
+        .filter(o => (id ? o.id === id : true))
+        // .filter(o => (!id ? notWaiting(o) : true))
+        .forEach(async operationDB => {
+          const operation = new Operation();
+
+          await operation.asyncConstructor(
+            { ...operationDB, operationService: this },
+            this.saveOperationToDB,
+            this.createSubOperation,
+            i > 1
+          );
+
+          this.operations.push(operation);
+        });
+
+      operations = operations.concat(ops);
+
+      const lastElement = operations[operations.length - 1];
+
+      console.log(
+        `Loaded ${i}/100 ${lastElement?.timestamp} ${operations.length}`,
+        new Date(lastElement?.timestamp * 1000)
+      );
+
+      if (lastElement && lastElement?.timestamp < weekTimestamp) {
+        break;
+      }
+    }
 
     // const notWaiting = (o: Operation) => {
     //   return (
@@ -82,21 +119,6 @@ export class OperationService {
     //     o.actions.some(a => a.status !== STATUS.WAITING)
     //   );
     // };
-
-    operations
-      .filter(o => (id ? o.id === id : true))
-      // .filter(o => (!id ? notWaiting(o) : true))
-      .forEach(async operationDB => {
-        const operation = new Operation();
-
-        await operation.asyncConstructor(
-          { ...operationDB, operationService: this },
-          this.saveOperationToDB,
-          this.createSubOperation
-        );
-
-        this.operations.push(operation);
-      });
   };
 
   saveOperationToDB = async (operation: Operation) => {
@@ -137,6 +159,7 @@ export class OperationService {
           op =>
             normalizeOne(op.ethAddress) === normalizeOne(params.ethAddress) &&
             op.amount === params.amount &&
+            op.disableActions === false &&
             (op.status === STATUS.IN_PROGRESS || op.status === STATUS.WAITING)
         )
       ) {
@@ -148,6 +171,7 @@ export class OperationService {
           op =>
             normalizeOne(op.oneAddress) === normalizeOne(params.oneAddress) &&
             op.amount === params.amount &&
+            op.disableActions === false &&
             (op.status === STATUS.IN_PROGRESS || op.status === STATUS.WAITING)
         )
       ) {
@@ -163,10 +187,10 @@ export class OperationService {
           op.type === params.type &&
           op.token === params.token &&
           (op.status === STATUS.IN_PROGRESS || op.status === STATUS.WAITING) &&
-          Date.now() - op.timestamp * 1000 < 1000 * 120 // 120 sec
+          (Date.now() - op.timestamp * 1000) < 1000 * 120 // 120 sec
       )
     ) {
-      throw createError(500, 'This operation already in progress');
+      throw createError(500, 'This operation already in progress. Wait 2 minutes to continue.');
     }
 
     try {
@@ -325,7 +349,7 @@ export class OperationService {
     this.operations.push(operation);
 
     if (this.operations.length > CACHE_LIMIT) {
-      this.removeLastOperationFromCache();
+      // this.removeLastOperationFromCache();
     }
 
     return operation.toObject();
@@ -552,10 +576,10 @@ export class OperationService {
         const hasAmount = params.amount ? params.amount === operation.amount : true;
         const hasTransaction = params.transactionHash
           ? operation.actions.some(
-              a =>
-                a.transactionHash &&
-                a.transactionHash.toLowerCase() === params.transactionHash.toLowerCase()
-            )
+            a =>
+              a.transactionHash &&
+              a.transactionHash.toLowerCase() === params.transactionHash.toLowerCase()
+          )
           : true;
 
         const hasSearch = params.search ? searchInOperation(params.search, operation) : true;

@@ -75,8 +75,8 @@ const arbitrumClient: TConfig = {
     erc1155Manager: '',
     erc1155TokenManager: '',
   },
-  gasPrice: 6000000000,
-  gasLimit: 1000000,
+  gasPrice: 200000000,
+  gasLimit: 2000000,
 };
 
 const ethClient: TConfig = {

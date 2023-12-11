@@ -1,7 +1,7 @@
 import { TConfig } from './index';
-import { TOKEN } from '../services/operations/interfaces';
+import { TOKEN, NETWORK_TYPE } from '../services/operations/interfaces';
 
-const api = {
+export const apiLegacy = {
   validators: [
     'https://be1.bridge.hmny.io',
     'https://be2.bridge.hmny.io',
@@ -11,10 +11,25 @@ const api = {
   assetServiceUrl: 'https://be4.bridge.hmny.io', // assets statistic service
 };
 
+export const hmyClientLegacy = {
+  nodeURL: 'https://api.s0.t.hmny.io',
+  explorerURL: 'https://explorer.harmony.one/#',
+  chainId: 1,
+  contracts: {
+    busd: '0xe176ebe47d621b984a73036b9da5d834411ef734',
+    link: '0x218532a12a389a4a92fc0c5fb22901d1c19198aa',
+    busdManager: '0x05d11b7082d5634e0318d818a2f0cd381b371ea5',
+    linkManager: '0xc0c7b147910ef11f6454dc1918ecde9a2b64a3a8',
+    erc20Manager: '0x2fbbcef71544c461edfc311f42e3583d5f9675d1',
+    erc20SubManager: '0xef81ab52721abbdae90862ee1ac10c20d3af2d0a',
+    erc721Manager: '0x39ec213272dda1f46424726bb20d82c3861568c0',
+    depositManager: '0xce3110e4ab757672b0535a9c1410fed80647b693',
+  },
+};
+
 const binanceClient: TConfig = {
   nodeURL: 'https://bsc-dataseed.binance.org/',
-  // nodeURL: 'https://bsc-dataseed4.binance.org/',
-  // nodeURL: 'https://bsc-dataseed1.defibit.io',
+  privateNodeUrl: process.env.BSC_RPC_URL,
   explorerURL: 'https://bscscan.com/',
   tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
   contracts: {
@@ -81,6 +96,7 @@ const arbitrumClient: TConfig = {
 
 const ethClient: TConfig = {
   nodeURL: 'https://mainnet.infura.io/v3',
+  privateNodeUrl: 'https://mainnet.infura.io/v3' + `/${process.env.INFURA_PROJECT_ID}`,
   explorerURL: 'https://etherscan.io',
   tokens: [TOKEN.ERC721, TOKEN.ERC1155, TOKEN.HRC721, TOKEN.HRC1155, TOKEN.HRC20, TOKEN.BUSD, TOKEN.LINK, TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH],
   contracts: {
@@ -107,26 +123,8 @@ const ethClient: TConfig = {
   },
 };
 
-const hmyClient = {
-  nodeURL: 'https://api.s0.t.hmny.io',
-  explorerURL: 'https://explorer.harmony.one/#',
-  chainId: 1,
-  contracts: {
-    busd: '0xe176ebe47d621b984a73036b9da5d834411ef734',
-    link: '0x218532a12a389a4a92fc0c5fb22901d1c19198aa',
-    busdManager: '0x05d11b7082d5634e0318d818a2f0cd381b371ea5',
-    linkManager: '0xc0c7b147910ef11f6454dc1918ecde9a2b64a3a8',
-    erc20Manager: '0x2fbbcef71544c461edfc311f42e3583d5f9675d1',
-    erc20SubManager: '0xef81ab52721abbdae90862ee1ac10c20d3af2d0a',
-    erc721Manager: '0x39ec213272dda1f46424726bb20d82c3861568c0',
-    depositManager: '0xce3110e4ab757672b0535a9c1410fed80647b693',
-  },
-};
-
-export const mainnet = {
-  api,
-  binanceClient,
-  arbitrumClient,
-  ethClient,
-  hmyClient,
+export const mainnet: Record<NETWORK_TYPE, TConfig> = {
+  [NETWORK_TYPE.BINANCE]: binanceClient,
+  [NETWORK_TYPE.ARBITRUM]: arbitrumClient,
+  [NETWORK_TYPE.ETHEREUM]: ethClient,
 };

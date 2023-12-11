@@ -3,7 +3,7 @@ import { NETWORK_TYPE, OPERATION_TYPE } from '../interfaces';
 import { createError } from '../../../routes/helpers';
 import { IOperationInitParams, TCreateOperationCallback } from '../Operation';
 import * as hmyContract from '../../../blockchain/hmy';
-import { binanceNetwork, ethNetwork, arbitrumNetwork, IMethods } from '../../../blockchain/eth';
+import { networks, IMethods } from '../../../blockchain/eth';
 // import { ethToOne, hmyToEth } from './base';
 import { ethToOneERC20, hmyToEthERC20 } from './erc20';
 
@@ -11,23 +11,8 @@ export const generateActionsPool = async (
   params: IOperationInitParams,
   createOperationCallback: TCreateOperationCallback,
 ): Promise<{ actions: Array<Action>; rollbackActions: Array<Action> }> => {
-  let externalNetwork: IMethods;
-
-  switch (params.network) {
-    case NETWORK_TYPE.ETHEREUM:
-      // throw createError(500, 'ETHEREUM Network operations are not supported now');
-      externalNetwork = ethNetwork;
-      break;
-    case NETWORK_TYPE.BINANCE:
-      externalNetwork = binanceNetwork;
-      break;
-    case NETWORK_TYPE.ARBITRUM:
-        externalNetwork = arbitrumNetwork;
-        break;  
-    default:
-      externalNetwork = ethNetwork;
-      break;
-  }
+  let externalNetwork: IMethods = networks[params.network]
+    || networks[NETWORK_TYPE.ETHEREUM];
 
   if (!externalNetwork.config.tokens.includes(params.token)) {
     throw createError(500, 'Token not support for this network');

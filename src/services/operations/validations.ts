@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { hmy } from '../../blockchain/hmy';
-import { binanceNetwork, ethNetwork } from '../../blockchain/eth';
+import { networks } from '../../blockchain/eth';
 import { createError } from '../../routes/helpers';
 import { NETWORK_TYPE, TOKEN } from './interfaces';
 import logger from '../../logger';
@@ -18,8 +18,9 @@ export const validateOneBalanceNonZero = async address => {
 
 export const validateEthBalanceNonZero = (ethAddress: string, network: NETWORK_TYPE) => {
   return new Promise((resolve, reject) => {
-    console.log(111, ethAddress);
-    const externalNetwork = network === NETWORK_TYPE.BINANCE ? binanceNetwork : ethNetwork;
+    const externalNetwork = network === NETWORK_TYPE.BINANCE ?
+      networks[NETWORK_TYPE.BINANCE]
+      : networks[NETWORK_TYPE.ETHEREUM];
 
     externalNetwork.web3.eth.getBalance(ethAddress, (err, balance) => {
       console.log(2222, err, balance);
@@ -77,31 +78,31 @@ export const getTokenUSDPrice = (token: TOKEN, erc20Address?: string) => {
       case TOKEN.BUSD:
         try {
           usdPrice = await getTokenPrice('BUSD');
-        } catch (e) {}
+        } catch (e) { }
         break;
 
       case TOKEN.ONE:
         try {
           usdPrice = await getTokenPrice('ONE');
-        } catch (e) {}
+        } catch (e) { }
         break;
 
       case TOKEN.LINK:
         try {
           usdPrice = await getTokenPrice('LINK');
-        } catch (e) {}
+        } catch (e) { }
         break;
 
       case TOKEN.ERC20:
         if (erc20Address) {
           try {
-            const [name, symbol, decimals] = await ethNetwork.ethMethods.tokenDetails(
+            const [name, symbol, decimals] = await networks[NETWORK_TYPE.ETHEREUM].ethMethods.tokenDetails(
               erc20Address
             );
             if (symbol) {
               usdPrice = await getTokenPrice(symbol);
             }
-          } catch (e) {}
+          } catch (e) { }
         }
         break;
     }
@@ -127,7 +128,7 @@ const GAS_PRICE_CACHE = {
 
 const loadDepositAmount = async () => {
   try {
-    const currentGasPrice = await ethNetwork.ethMethods.getGasPrice();
+    const currentGasPrice = await networks[NETWORK_TYPE.ETHEREUM].ethMethods.getGasPrice();
 
     const ethPrice = await getTokenPrice('ETH');
     const onePrice = await getTokenPrice('ONE');
@@ -143,7 +144,7 @@ const loadDepositAmount = async () => {
   }
 
   try {
-    const currentGasPrice = await binanceNetwork.web3.eth.getGasPrice();
+    const currentGasPrice = await networks[NETWORK_TYPE.BINANCE].web3.eth.getGasPrice();
 
     const bnbPrice = await getTokenPrice('BNB');
     const onePrice = await getTokenPrice('ONE');

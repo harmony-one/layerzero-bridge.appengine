@@ -1,13 +1,14 @@
 import { DBService } from '../database';
 import logger from '../../logger';
 import { divDecimals } from './helpers';
-import { binanceNetwork, ethNetwork, arbitrumNetwork } from '../../blockchain/eth';
+import { networks } from '../../blockchain/eth';
 import { web3Hmy } from '../../blockchain/hmy';
 import { OperationService } from '../operations';
 import { getConfig } from '../../configs';
 import { tokenPrices } from './TokenPrices';
-import { tokensConfigs, ITokenInfo as ITokenConfigInfo, NETWORK_TYPE } from './config';
+import { tokensConfigs, ITokenInfo as ITokenConfigInfo } from './config';
 import { TOKEN } from 'bridge-sdk';
+import { NETWORK_TYPE } from '../operations/interfaces';
 const log = logger.module('validator:tokensService');
 
 const config = getConfig();
@@ -74,47 +75,21 @@ export class Tokens {
 
             try {
                 if (token.type === TOKEN.ETH) {
-                    switch (token.network) {
-                        case NETWORK_TYPE.BINANCE:
-                            totalLocked = Number(
-                                await binanceNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
-                            );
-                            break;
+                    const ethMethods = networks[token.network];
 
-                        case NETWORK_TYPE.ETHEREUM:
-                            totalLocked = Number(
-                                await ethNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
-                            );
-                            break;
-
-                        case NETWORK_TYPE.ARBITRUM:
-                            totalLocked = Number(
-                                await arbitrumNetwork.ethMethods.nativeTokenBalance(token.proxyERC20)
-                            );
-                            break;
-                    }
+                    totalLocked = Number(
+                        await ethMethods.nativeTokenBalance(token.proxyERC20)
+                    );
                 } else if (token.type === TOKEN.ONE) {
                     totalLocked = Number(
                         await web3Hmy.eth.getBalance(token.proxyHRC20)
                     );
                 } else {
-                    switch (token.network) {
-                        case NETWORK_TYPE.BINANCE:
-                            totalLocked = await binanceNetwork.ethMethods.tokenBalance(
-                                token.erc20Address, token.proxyERC20
-                            );
-                            break;
-                        case NETWORK_TYPE.ETHEREUM:
-                            totalLocked = await ethNetwork.ethMethods.tokenBalance(
-                                token.erc20Address, token.proxyERC20
-                            );
-                            break;
-                        case NETWORK_TYPE.ARBITRUM:
-                            totalLocked = await arbitrumNetwork.ethMethods.tokenBalance(
-                                token.erc20Address, token.proxyERC20
-                            );
-                            break;
-                    }
+                    const ethMethods = networks[token.network];
+
+                    totalLocked = await ethMethods.tokenBalance(
+                        token.erc20Address, token.proxyERC20
+                    );
                 }
             } catch (e) {
                 log.error('get totalSupply', { error: e, token });

@@ -56,18 +56,18 @@ export class HmyTokensTracker {
       if (params.token === TOKEN.ERC20 && params.network === NETWORK_TYPE.ETHEREUM) {
         this.tokens = [
           {
-            erc20Address: config.ethClient.contracts.busd,
-            hrc20Address: config.hmyClient.contracts.busd,
+            erc20Address: config[NETWORK_TYPE.ETHEREUM].contracts.busd,
+            hrc20Address: '0xe176ebe47d621b984a73036b9da5d834411ef734',
             token: this.token,
           },
           {
             erc20Address: '0x00eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-            hrc20Address: config.ethClient.contracts.nativeTokenHRC20,
+            hrc20Address: config[NETWORK_TYPE.ETHEREUM].contracts.nativeTokenHRC20,
             token: this.token,
           },
           {
-            erc20Address: config.ethClient.contracts.link,
-            hrc20Address: config.hmyClient.contracts.link,
+            erc20Address: config[NETWORK_TYPE.ETHEREUM].contracts.link,
+            hrc20Address: '0x218532a12a389a4a92fc0c5fb22901d1c19198aa',
             token: this.token,
           },
           {
@@ -91,7 +91,7 @@ export class HmyTokensTracker {
         this.tokens = [
           {
             erc20Address: '0x00eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-            hrc20Address: config.binanceClient.contracts.nativeTokenHRC20,
+            hrc20Address: config[NETWORK_TYPE.BINANCE].contracts.nativeTokenHRC20,
             token: this.token,
             network: NETWORK_TYPE.BINANCE,
           },

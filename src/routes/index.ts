@@ -4,7 +4,8 @@ import { getConfig } from '../configs';
 import { validateEthBalanceNonZero, validateOneBalanceNonZeroEx } from '../services/operations/validations';
 import { hmyEventsTracker } from '../blockchain/hmy';
 import { MANAGER_ACTION, NETWORK_TYPE } from '../services/operations/interfaces';
-import { binanceNetwork, ethNetwork } from '../blockchain/eth';
+import { networks } from '../blockchain/eth';
+import { apiLegacy, hmyClientLegacy } from '../configs/mainnet';
 
 export const routes = (app, services: IServices) => {
   // create new BUSD transfer operation
@@ -246,7 +247,16 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/config',
     asyncHandler(async (req, res) => {
-      return res.json(getConfig());
+      const config = getConfig();
+
+      return res.json({
+        ...config,
+        api: apiLegacy,
+        hmyClient: hmyClientLegacy,
+        ethClient: config[NETWORK_TYPE.ETHEREUM],
+        binanceClient: config[NETWORK_TYPE.BINANCE],
+        arbitrumClient: config[NETWORK_TYPE.ARBITRUM],
+      });
     })
   );
 
@@ -290,7 +300,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/events-history-bsc',
     asyncHandler(async (req, res) => {
-      const data = await binanceNetwork.ethEventsTracker.getEventsHistory();
+      const data = await networks[NETWORK_TYPE.BINANCE].ethEventsTracker.getEventsHistory();
       return res.json(data);
     })
   );
@@ -298,7 +308,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/events-history-bsc-res',
     asyncHandler(async (req, res) => {
-      const data = await binanceNetwork.ethEventsTrackerRes.getEventsHistory();
+      const data = await networks[NETWORK_TYPE.BINANCE].ethEventsTrackerRes.getEventsHistory();
       return res.json(data);
     })
   );
@@ -306,7 +316,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/events-history-bsc-token',
     asyncHandler(async (req, res) => {
-      const data = await binanceNetwork.ethTokensEventsTracker.getEventsHistory();
+      const data = await networks[NETWORK_TYPE.BINANCE].ethTokensEventsTracker.getEventsHistory();
       return res.json(data);
     })
   );
@@ -314,7 +324,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/events-history-eth',
     asyncHandler(async (req, res) => {
-      const data = await ethNetwork.ethEventsTracker.getEventsHistory();
+      const data = await networks[NETWORK_TYPE.ETHEREUM].ethEventsTracker.getEventsHistory();
       return res.json(data);
     })
   );
@@ -322,7 +332,7 @@ export const routes = (app, services: IServices) => {
   app.get(
     '/events-history-eth-res',
     asyncHandler(async (req, res) => {
-      const data = await ethNetwork.ethEventsTrackerRes.getEventsHistory();
+      const data = await networks[NETWORK_TYPE.ETHEREUM].ethEventsTrackerRes.getEventsHistory();
       return res.json(data);
     })
   );
@@ -369,11 +379,11 @@ export const routes = (app, services: IServices) => {
         case MANAGER_ACTION.RELOAD_EVENTS:
           switch (otherParams.network) {
             case NETWORK_TYPE.ETHEREUM:
-              result = ethNetwork.ethEventsTracker.reloadEvents(otherParams.value);
+              result = networks[NETWORK_TYPE.ETHEREUM].ethEventsTracker.reloadEvents(otherParams.value);
               break;
 
             case NETWORK_TYPE.BINANCE:
-              result = binanceNetwork.ethEventsTracker.reloadEvents(otherParams.value);
+              result = networks[NETWORK_TYPE.BINANCE].ethEventsTracker.reloadEvents(otherParams.value);
               break;
 
             default:

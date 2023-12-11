@@ -1,20 +1,13 @@
 import { mainnet } from './mainnet';
-import { testnet } from './testnet';
 import { TOKEN } from '../services/operations/interfaces';
 
 export const getConfig = () => {
-  switch (process.env.NETWORK) {
-    case 'mainnet':
-      return mainnet;
-    case 'testnet':
-      return testnet;
-    default:
-      return mainnet;
-  }
+    return mainnet;
 };
 
 export type TConfig = {
   nodeURL: string;
+  privateNodeUrl?: string;
   explorerURL: string;
   tokens: TOKEN[];
   contracts?: {

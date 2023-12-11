@@ -1,3 +1,5 @@
+import { NETWORK_TYPE } from "../operations/interfaces";
+
 export interface ITokenInfo {
   name: string;
   horizon?: boolean;
@@ -20,13 +22,6 @@ export interface ITokenInfo {
     chainId: number,
   },
   adapterParams?: string;
-}
-
-export enum NETWORK_TYPE {
-  ETHEREUM = 'ETHEREUM',
-  BINANCE = 'BINANCE',
-  HARMONY = 'HARMONY',
-  ARBITRUM  = 'ARBITRUM'
 }
 
 export enum TOKEN {

@@ -160,19 +160,13 @@ const init = (config: TConfig, network: NETWORK_TYPE, nodeUrl?: string): IMethod
 
 const config = getConfig();
 
-export const ethNetwork = init(
-  config.ethClient,
-  NETWORK_TYPE.ETHEREUM,
-  config.ethClient.nodeURL + `/${process.env.INFURA_PROJECT_ID}`
-);
-export const binanceNetwork = init(
-  config.binanceClient,
-  NETWORK_TYPE.BINANCE,
-  process.env.BSC_RPC_URL
-);
-
-export const arbitrumNetwork = init(
-  config.arbitrumClient,
-  NETWORK_TYPE.ARBITRUM,
-  process.env.ARB_RPC_URL
-);
+export const networks = Object.keys(config).reduce((acc, key: NETWORK_TYPE) => {
+  return {
+    ...acc,
+    [key]: init(
+      config[key],
+      key,
+      config[key].privateNodeUrl
+    )
+  }
+}, {})

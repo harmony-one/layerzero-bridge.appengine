@@ -5,7 +5,7 @@ import { validateEthBalanceNonZero, validateOneBalanceNonZeroEx } from '../servi
 import { hmyEventsTracker } from '../blockchain/hmy';
 import { MANAGER_ACTION, NETWORK_TYPE } from '../services/operations/interfaces';
 import { networks } from '../blockchain/eth';
-import { apiLegacy, hmyClientLegacy } from '../configs/mainnet';
+import { apiLegacy, hmyClientLegacy } from '../configs/legacy';
 
 export const routes = (app, services: IServices) => {
   // create new BUSD transfer operation

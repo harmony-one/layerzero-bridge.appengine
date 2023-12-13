@@ -29,8 +29,16 @@ const ethClient: TConfig = {
   contracts: legacyContracts,
 };
 
+const lineaClient: TConfig = {
+  nodeURL: 'https://rpc.linea.build',
+  explorerURL: 'https://lineascan.build',
+  tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
+  contracts: legacyContracts,
+};
+
 export const mainnet: Record<NETWORK_TYPE, TConfig> = {
   [NETWORK_TYPE.BINANCE]: binanceClient,
   [NETWORK_TYPE.ARBITRUM]: arbitrumClient,
-  [NETWORK_TYPE.ETHEREUM]: ethClient
+  [NETWORK_TYPE.ETHEREUM]: ethClient,
+  [NETWORK_TYPE.LINEA]: lineaClient,
 };

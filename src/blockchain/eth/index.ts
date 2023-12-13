@@ -160,7 +160,7 @@ const init = (config: TConfig, network: NETWORK_TYPE, nodeUrl?: string): IMethod
 
 const config = getConfig();
 
-export const networks = Object.keys(config).reduce((acc, key: NETWORK_TYPE) => {
+export const networks: Record<NETWORK_TYPE, IMethods> = Object.keys(config).reduce((acc, key: NETWORK_TYPE) => {
   return {
     ...acc,
     [key]: init(
@@ -169,4 +169,4 @@ export const networks = Object.keys(config).reduce((acc, key: NETWORK_TYPE) => {
       config[key].privateNodeUrl
     )
   }
-}, {})
+}, {} as any)

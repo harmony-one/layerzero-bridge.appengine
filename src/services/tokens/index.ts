@@ -75,19 +75,19 @@ export class Tokens {
 
             try {
                 if (token.type === TOKEN.ETH) {
-                    const ethMethods = networks[token.network];
+                    const network = networks[token.network];
 
                     totalLocked = Number(
-                        await ethMethods.nativeTokenBalance(token.proxyERC20)
+                        await network.ethMethods.nativeTokenBalance(token.proxyERC20)
                     );
                 } else if (token.type === TOKEN.ONE) {
                     totalLocked = Number(
                         await web3Hmy.eth.getBalance(token.proxyHRC20)
                     );
                 } else {
-                    const ethMethods = networks[token.network];
+                    const network = networks[token.network];
 
-                    totalLocked = await ethMethods.tokenBalance(
+                    totalLocked = await network.ethMethods.tokenBalance(
                         token.erc20Address, token.proxyERC20
                     );
                 }

@@ -2,7 +2,8 @@ export enum NETWORK_TYPE {
   ETHEREUM = 'ETHEREUM',
   BINANCE = 'BINANCE',
   ARBITRUM = 'ARBITRUM',
-  LINEA = 'LINEA'
+  LINEA = 'LINEA',
+  BASE = 'BASE'
 }
 
 export enum TOKEN_TYPE {

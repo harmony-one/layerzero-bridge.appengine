@@ -1,10 +1,11 @@
 import { TConfig } from './index';
 import { TOKEN, NETWORK_TYPE } from '../services/operations/interfaces';
 import { legacyContracts } from './legacy';
+import { getAlchemyRpcUrl } from './rpc';
 
 const binanceClient: TConfig = {
-  nodeURL: 'https://bsc-dataseed.binance.org/',
-  privateNodeUrl: process.env.BSC_RPC_URL,
+  nodeURL: getAlchemyRpcUrl('bnb-mainnet'),
+  privateNodeUrl: getAlchemyRpcUrl('bnb-mainnet'),
   explorerURL: 'https://bscscan.com/',
   tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
   contracts: legacyContracts,
@@ -13,7 +14,7 @@ const binanceClient: TConfig = {
 };
 
 const arbitrumClient: TConfig = {
-  nodeURL: 'https://rpc.ankr.com/arbitrum',
+  nodeURL: getAlchemyRpcUrl('arb-mainnet'),
   explorerURL: 'https://arbiscan.io/',
   tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
   contracts: legacyContracts,
@@ -22,22 +23,22 @@ const arbitrumClient: TConfig = {
 };
 
 const ethClient: TConfig = {
-  nodeURL: 'https://mainnet.infura.io/v3',
-  privateNodeUrl: 'https://mainnet.infura.io/v3' + `/${process.env.INFURA_PROJECT_ID}`,
+  nodeURL: getAlchemyRpcUrl('eth-mainnet'),
+  privateNodeUrl: getAlchemyRpcUrl('eth-mainnet'),
   explorerURL: 'https://etherscan.io',
   tokens: [TOKEN.ERC721, TOKEN.ERC1155, TOKEN.HRC721, TOKEN.HRC1155, TOKEN.HRC20, TOKEN.BUSD, TOKEN.LINK, TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH],
   contracts: legacyContracts,
 };
 
 const lineaClient: TConfig = {
-  nodeURL: 'https://rpc.linea.build',
+  nodeURL: getAlchemyRpcUrl('linea-mainnet'),
   explorerURL: 'https://lineascan.build',
   tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
   contracts: legacyContracts,
 };
 
 const baseClient: TConfig = {
-  nodeURL: 'https://developer-access-mainnet.base.org',
+  nodeURL: getAlchemyRpcUrl('base-mainnet'),
   explorerURL: 'https://basescan.org',
   tokens: [TOKEN.ERC20, TOKEN.ONE, TOKEN.ETH, TOKEN.HRC20],
   contracts: legacyContracts,

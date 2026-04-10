@@ -11,6 +11,7 @@ import logger from '../../logger';
 import { DBService } from '../../services/database';
 import { sleep } from '../utils';
 import { getEvent, getHmyLogs } from './helpers';
+import { getAlchemyRpcUrl } from '../../configs/rpc';
 const log = logger.module('validator:HmyEventsTracker');
 
 const CHECK_EVENTS_INTERVAL = 10000;
@@ -52,7 +53,7 @@ export class HmyEventsTracker {
     this.hmyManagerMultiSigAddress = params.hmyManagerMultiSigAddress;
     this.database = params.database;
     this.web3Hmy = new Web3(`${process.env.HMY_NODE_URL}`);
-    this.web3 = new Web3(`${process.env.ETH_NODE_URL}/${process.env.INFURA_PROJECT_ID}`);
+    this.web3 = new Web3(getAlchemyRpcUrl('eth-mainnet'));
 
     // if (process.env.HMY_TOKENS_TRACKER_ENABLE !== 'true') {
     //   this.init();

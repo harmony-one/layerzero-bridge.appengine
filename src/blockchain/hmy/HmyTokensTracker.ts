@@ -5,6 +5,7 @@ import logger from '../../logger';
 import { ITokenInfo, NETWORK_TYPE, TOKEN } from '../../services/operations/interfaces';
 import { getConfig } from '../../configs';
 import { getEvent, getHmyLogs } from './helpers';
+import { getAlchemyRpcUrl } from '../../configs/rpc';
 
 const log = logger.module('validator:tokensTracker');
 
@@ -44,7 +45,7 @@ export class HmyTokensTracker {
 
   constructor(params: IHmyTokensTrackerParams) {
     this.web3Hmy = new Web3(`${process.env.HMY_NODE_URL}`);
-    this.web3 = new Web3(`${process.env.ETH_NODE_URL}/${process.env.INFURA_PROJECT_ID}`);
+    this.web3 = new Web3(getAlchemyRpcUrl('eth-mainnet'));
 
     this.tokenManagerJsonAbi = params.tokenManagerJsonAbi;
     this.tokenManagerAddress = params.tokenManagerAddress;
